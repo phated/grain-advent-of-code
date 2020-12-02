@@ -1,0 +1,16 @@
+import List from 'list';
+
+let data = [
+  1721,
+  979,
+  366,
+  299,
+  675,
+  1456,
+]
+
+let allPairs = List.product(data, data);
+
+let (a, b) = List.find(((a, b)) => a + b == 2020, allPairs);
+
+print(a * b);
