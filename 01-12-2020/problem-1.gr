@@ -1,7 +1,7 @@
-import List from 'list';
+import Array from 'array';
 
-let data = [
-  1664,
+// TODO: This shouldn't have to be on same line
+let data = [> 1664,
   1909,
   1904,
   1638,
@@ -203,8 +203,8 @@ let data = [
   1093,
 ]
 
-let allPairs = List.product(data, data);
+let allPairs = Array.product(data, data);
 
-let (a, b) = List.find(((a, b)) => a + b == 2020, allPairs);
+let (a, b) = Array.find(((a, b)) => a + b == 2020, allPairs);
 
 print(a * b);
