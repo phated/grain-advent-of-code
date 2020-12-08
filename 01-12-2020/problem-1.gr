@@ -1,7 +1,7 @@
 import Array from 'array';
 
-// TODO: This shouldn't have to be on same line
-let data = [> 1664,
+let data = [>
+  1664,
   1909,
   1904,
   1638,
