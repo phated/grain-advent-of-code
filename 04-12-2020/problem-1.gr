@@ -1,0 +1,31 @@
+import String from 'string';
+import Array from 'array';
+import List from 'list';
+
+import { data } from './data'
+
+let fields = [
+  "byr",
+  "iyr",
+  "eyr",
+  "hgt",
+  "hcl",
+  "ecl",
+  "pid",
+  "cid",
+];
+
+let passports = String.split(data, "\n\n");
+
+let validPassports = Array.reduce((valid, passport) => {
+  let isValid = List.every((field) => {
+    field == "cid" || String.contains(passport, field ++ ":")
+  }, fields);
+  if (isValid) {
+    valid + 1
+  } else {
+    valid
+  }
+}, 0, passports);
+
+print("Valid passports: " ++ toString(validPassports));
