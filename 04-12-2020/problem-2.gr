@@ -61,7 +61,7 @@ let validPassports = Array.reduce((valid, passportElements) => {
         Byr(search, validations) when String.contains(element, search) => {
           let value = getValue(element);
           List.some(((length, range)) => {
-            // If verbosity is needed because `&&` is a function and applies in reverse
+            // `if` verbosity is needed because `&&` is a function and applies in reverse
             if (String.length(value) == length) {
               isBetween(value, range)
             } else {
@@ -72,7 +72,7 @@ let validPassports = Array.reduce((valid, passportElements) => {
         Iyr(search, validations) when String.contains(element, search) => {
           let value = getValue(element);
           List.some(((length, range)) => {
-            // If verbosity is needed because `&&` is a function and applies in reverse
+            // `if` verbosity is needed because `&&` is a function and applies in reverse
             if (String.length(value) == length) {
               isBetween(value, range)
             } else {
@@ -83,7 +83,7 @@ let validPassports = Array.reduce((valid, passportElements) => {
         Eyr(search, validations) when String.contains(element, search) => {
           let value = getValue(element);
           List.some(((length, range)) => {
-            // If verbosity is needed because `&&` is a function and applies in reverse
+            // `if` verbosity is needed because `&&` is a function and applies in reverse
             if (String.length(value) == length) {
               isBetween(value, range)
             } else {
@@ -94,7 +94,7 @@ let validPassports = Array.reduce((valid, passportElements) => {
         Hgt(search, validations) when String.contains(element, search) => {
           let value = getValue(element);
           List.some(((length, search, range)) => {
-            // If verbosity is needed because `&&` is a function and applies in reverse
+            // `if` verbosity is needed because `&&` is a function and applies in reverse
             if (String.length(value) == length) {
               if (String.endsWith(value, search)) {
                 isBetween(String.slice(value, 0, -2), range)
@@ -109,7 +109,7 @@ let validPassports = Array.reduce((valid, passportElements) => {
         Hcl(search, validations) when String.contains(element, search) => {
           let value = getValue(element);
           List.some(((length, startChar)) => {
-            // If verbosity is needed because `&&` is a function and applies in reverse
+            // `if` verbosity is needed because `&&` is a function and applies in reverse
             if (String.length(value) == length) {
               if (String.startsWith(value, startChar)) {
                 isValidColor(String.slice(value, 1, length))
@@ -124,7 +124,7 @@ let validPassports = Array.reduce((valid, passportElements) => {
         Ecl(search, validations) when String.contains(element, search) => {
           let value = getValue(element);
           List.some(((length, exactMatch)) => {
-            // If verbosity is needed because `&&` is a function and applies in reverse
+            // `if` verbosity is needed because `&&` is a function and applies in reverse
             if (String.length(value) == length) {
               value == exactMatch
             } else {
@@ -135,7 +135,7 @@ let validPassports = Array.reduce((valid, passportElements) => {
         Pid(search, validations) when String.contains(element, search) => {
           let value = getValue(element);
           List.some(((length)) => {
-            // If verbosity is needed because `&&` is a function and applies in reverse
+            // `if` verbosity is needed because `&&` is a function and applies in reverse
             if (String.length(value) == length) {
               Option.isSome(naiveParseInt(value))
             } else {
