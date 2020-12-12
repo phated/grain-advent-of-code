@@ -1,0 +1,51 @@
+import List from 'list';
+import String from 'string';
+import Array from 'array';
+import Option from 'option';
+
+import { data } from './data';
+
+let seats = List.init(128, (row) => {
+  List.init(8, (col) => row * 8 + col)
+})
+
+let findSeat = (boardingPass, seats) => {
+  let wrappedSeat = Array.reduce((remain, letter) => {
+    match (letter) {
+      "F" => {
+        let (front, back) = List.part(List.length(remain) / 2, remain);
+        front
+      },
+      "B" => {
+        let (front, back) = List.part(List.length(remain) / 2, remain);
+        back
+      },
+      "L" when List.length(remain) == 1 => {
+        let row = Option.expect("Expected a row", List.head(remain));
+        let (left, right) = List.part(List.length(row) / 2, row);
+        [left]
+      },
+      "L" => fail "Looking for `left` without a single row",
+      "R" when List.length(remain) == 1 => {
+        let row = Option.expect("Expected a row", List.head(remain));
+        let (left, right) = List.part(List.length(row) / 2, row);
+        [right]
+      },
+      "R" => fail "Looking for `right` without a single row",
+      letter => fail "How did we get here? " ++ letter
+    }
+  }, seats, String.explode(boardingPass))
+
+  match (wrappedSeat) {
+    [[seat]] => seat,
+    _ => fail "Problem getting seat",
+  }
+}
+
+let maxSeat = Array.reduce((maxSeat, boardingPass) => {
+  let seat = findSeat(boardingPass, seats);
+  if (seat > maxSeat) seat else maxSeat
+}, 0, String.split(data, "\n"))
+
+
+print(("Max seat number", maxSeat));
