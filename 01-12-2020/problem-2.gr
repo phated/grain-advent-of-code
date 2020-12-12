@@ -1,6 +1,7 @@
-import Array from 'array';
+import List from 'list';
+import Option from 'option';
 
-let data = [>
+let data = [
   1664,
   1909,
   1904,
@@ -203,9 +204,10 @@ let data = [>
   1093,
 ]
 
-let allPairs = Array.product(data, Array.product(data, data));
+let allPairs = List.product(data, List.product(data, data));
 
-let (a, (b, c)) = Array.find(((a, (b, c))) => a + b + c == 2020, allPairs);
-print((a, b, c));
+let (a, (b, c)) = Option.expect("Expected to find values", List.find(((a, (b, c))) => a + b + c == 2020, allPairs));
 
-print(a * b * c);
+print(("Values:", a, b, c));
+print(("Answer:", a * b * c));
+
