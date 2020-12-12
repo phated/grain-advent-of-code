@@ -10,7 +10,7 @@ import { data } from './data';
 // Abstraction over the fallible parse and Range check
 let isBetween = (value, range) => {
   Option.mapWithDefaultFn(
-    (num) => Range.isBetween(num, range),
+    (num) => Range.inRange(num, range),
     () => false,
     naiveParseInt(value),
   )
@@ -38,10 +38,10 @@ enum Validations {
 }
 
 let fields = [
-  Byr("byr", [(4, Range.inclusive(1920, 2002))]),
-  Iyr("iyr", [(4, Range.inclusive(2010, 2020))]),
-  Eyr("eyr", [(4, Range.inclusive(2020, 2030))]),
-  Hgt("hgt", [(5, "cm", Range.inclusive(150, 193)), (4, "in", Range.inclusive(59, 76))]),
+  Byr("byr", [(4, Range.Inclusive(1920, 2002))]),
+  Iyr("iyr", [(4, Range.Inclusive(2010, 2020))]),
+  Eyr("eyr", [(4, Range.Inclusive(2020, 2030))]),
+  Hgt("hgt", [(5, "cm", Range.Inclusive(150, 193)), (4, "in", Range.Inclusive(59, 76))]),
   // TODO: A way to specify a character set
   Hcl("hcl", [(7, "#")]),
   Ecl("ecl", [(3, "amb"), (3, "blu"), (3, "brn"), (3, "gry"), (3, "grn"), (3, "hzl"), (3, "oth")]),
