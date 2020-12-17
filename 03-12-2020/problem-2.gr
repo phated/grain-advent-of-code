@@ -1,8 +1,8 @@
-import String from 'string';
-import Array from 'array';
-import List from 'list';
+import String from "string"
+import Array from "array"
+import List from "list"
 
-import { data } from './data';
+import { data } from "./data"
 
 let rows = Array.map(String.explode, String.split(data, "\n"));
 
@@ -23,9 +23,9 @@ let findTrees = (colInc, rowInc, data) => {
     let row = rows[nextRow];
     let len = Array.length(row);
     match (row[nextCol % len]) {
-      "." => Open(nextRow, nextCol),
-      "#" => Tree(nextRow, nextCol),
-      x => fail "Unknown value: " ++ x
+      '.' => Open(nextRow, nextCol),
+      '#' => Tree(nextRow, nextCol),
+      x => fail "Unknown value: " ++ toString(x)
     }
   }
 

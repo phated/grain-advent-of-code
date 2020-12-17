@@ -1,11 +1,11 @@
-import String from 'string';
-import Array from 'array';
-import List from 'list';
-import Option from 'option';
-import Range from 'range';
-import { naiveParseInt } from '../utils';
+import String from "string";
+import Array from "array";
+import List from "list";
+import Option from "option";
+import Range from "range";
+import { naiveParseInt } from "../utils";
 
-import { data } from './data';
+import { data } from "./data";
 
 // Abstraction over the fallible parse and Range check
 let isBetween = (value, range) => {
@@ -21,7 +21,7 @@ let getValue = (element) => {
 }
 
 let isValidColor = (value) => {
-  let validChars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
+  let validChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
   Array.every((char) => List.contains(char, validChars), String.explode(value))
 }
 

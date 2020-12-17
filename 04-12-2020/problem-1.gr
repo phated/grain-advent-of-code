@@ -1,8 +1,8 @@
-import String from 'string';
-import Array from 'array';
-import List from 'list';
+import String from "string"
+import Array from "array"
+import List from "list"
 
-import { data } from './data'
+import { data } from "./data"
 
 let fields = [
   "byr",

@@ -1,9 +1,9 @@
-import String from 'string'
-import Array from 'array'
-import Option from 'option'
-import { naiveParseInt } from '../utils'
+import String from "string"
+import Array from "array"
+import Option from "option"
+import { naiveParseInt } from "../utils"
 
-import { data } from './data'
+import { data } from "./data"
 
 
 export record Info {
@@ -24,7 +24,8 @@ let rows = Array.map((row) => {
 }, String.split(data, "\n"));
 
 let validAmount = Array.reduce((valid, info) => {
-  let chars = String.explode(info.password);
+  // TODO: Can't use String.explode because I can't compare char to string
+  let chars = String.split(info.password, "");
   if ((chars[info.position1] == info.policy && chars[info.position2] != info.policy) ||
       (chars[info.position1] != info.policy && chars[info.position2] == info.policy)) {
     valid + 1

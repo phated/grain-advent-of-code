@@ -1,9 +1,9 @@
-import String from 'string'
-import Array from 'array'
-import Option from 'option';
-import { naiveParseInt } from '../utils'
+import String from "string"
+import Array from "array"
+import Option from "option"
+import { naiveParseInt } from "../utils"
 
-import { data } from './data';
+import { data } from "./data"
 
 export record Info {
   min: Number,
