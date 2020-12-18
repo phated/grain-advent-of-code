@@ -1,0 +1,16 @@
+import String from "string"
+import Array from "array"
+
+import { data } from "./data"
+
+let uniqueAnswers = Array.map((group) => {
+  let chars = String.explode(group);
+  let charsWithoutNewline = Array.filter(char => char != '\n', chars);
+  Array.unique(charsWithoutNewline)
+}, String.split(data, "\n\n"));
+
+let countAnswers = Array.reduce((acc, answers) => {
+  acc + Array.length(answers)
+}, 0, uniqueAnswers)
+
+print(("Sum of unique answers", countAnswers));
