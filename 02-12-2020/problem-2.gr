@@ -1,6 +1,7 @@
 import String from "string"
 import Array from "array"
 import Option from "option"
+import Char from "char"
 import { naiveParseInt } from "../utils"
 
 import { data } from "./data"
@@ -24,10 +25,11 @@ let rows = Array.map((row) => {
 }, String.split(data, "\n"));
 
 let validAmount = Array.reduce((valid, info) => {
-  // TODO: Can't use String.explode because I can't compare char to string
-  let chars = String.split(info.password, "");
-  if ((chars[info.position1] == info.policy && chars[info.position2] != info.policy) ||
-      (chars[info.position1] != info.policy && chars[info.position2] == info.policy)) {
+  let chars = String.explode(info.password);
+  let charPos1 = Char.toString(chars[info.position1]);
+  let charPos2 = Char.toString(chars[info.position2]);
+  if ((charPos1 == info.policy && charPos2 != info.policy) ||
+      (charPos1 != info.policy && charPos2 == info.policy)) {
     valid + 1
   } else {
     valid
