@@ -36,21 +36,19 @@ let instructions = Array.map(instruct => {
 
 let rec processInstruction = (idx) => {
   print((idx, instructions[idx]))
-  match (instructions[idx]) {
-    Acc(amount) when !Set.contains(idx, called) => {
-      state += amount
-      Set.add(idx, called)
-      processInstruction(idx + 1)
-    },
-    Jmp(next) when !Set.contains(idx, called) => {
-      Set.add(idx, called)
-      processInstruction(idx + next)
-    },
-    Nop when !Set.contains(idx, called) => {
-      Set.add(idx, called)
-      processInstruction(idx + 1)
-    },
-    _ => state
+  if (Set.contains(idx, called)) {
+    state
+  } else {
+    Set.add(idx, called)
+    let nextIdx = match (instructions[idx]) {
+      Acc(amount) => {
+        state += amount
+        idx + 1
+      },
+      Jmp(next) => idx + next,
+      Nop => idx + 1,
+    }
+    processInstruction(nextIdx)
   }
 }
 
