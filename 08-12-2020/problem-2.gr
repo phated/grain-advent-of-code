@@ -1,0 +1,102 @@
+import Array from "array"
+import String from "string"
+import Option from "option"
+import Set from "set"
+import { naiveParseInt } from "../utils"
+
+import { data } from "./data"
+
+export enum Instructions {
+  Acc(Number),
+  Jmp(Number),
+  Nop(Number),
+}
+
+let parseIntWithSign = (origStr) => {
+  let str = String.slice(origStr, 1, String.length(origStr));
+  let num = Option.expect("Expected a valid string", naiveParseInt(str));
+  match (num) {
+    num when String.startsWith(origStr, "+") => num,
+    num when String.startsWith(origStr, "-") => num * -1,
+    _ => fail "Invalid sign for number string"
+  }
+}
+
+let instructions = Array.map(instruct => {
+  match (String.split(instruct, " ")) {
+    [> "acc", arg] => Acc(parseIntWithSign(arg)),
+    [> "jmp", arg] => Jmp(parseIntWithSign(arg)),
+    [> "nop", arg] => Nop(parseIntWithSign(arg)),
+    x => fail "Can't handle: " ++ toString(x)
+  }
+}, String.split(data, "\n"))
+
+let tryToProcess = (afterIdx) => {
+  let called = Set.make();
+  let mut state = 0;
+
+  let mut changedIdx = None;
+
+  let instructions = Array.mapi((el, idx) => {
+    match (el) {
+      Acc(amount) => Acc(amount),
+      Jmp(next) => {
+        if (Option.isNone(changedIdx) && idx > afterIdx) {
+          changedIdx = Some(idx)
+          Nop(next)
+        } else {
+          Jmp(next)
+        }
+      },
+      Nop(next) => {
+        if (Option.isNone(changedIdx) && idx > afterIdx) {
+          changedIdx = Some(idx)
+          Jmp(next)
+        } else {
+          Nop(next)
+        }
+      }
+    }
+  }, instructions)
+
+  let instructionsLength = Array.length(instructions);
+
+  let rec processInstruction = (idx) => {
+    // print((idx, instructions[idx]))
+    if (Set.contains(idx, called)) {
+      Err(Option.expect("Expected changedIdx", changedIdx))
+    } else {
+      Set.add(idx, called)
+      if (idx >= instructionsLength) {
+        Ok(state)
+      } else {
+        let nextIdx = match (instructions[idx]) {
+          Acc(amount) => {
+            state += amount
+            idx + 1
+          },
+          Jmp(next) => next + idx,
+          Nop(_) => idx + 1,
+        }
+        processInstruction(nextIdx)
+      }
+    }
+  }
+
+  processInstruction(0)
+}
+
+let rec bruteForce = (lastReplaceIdx) => {
+  print(("trying to replace after", lastReplaceIdx));
+  match (tryToProcess(lastReplaceIdx)) {
+    Ok(result) => result,
+    Err(replacedIdx) => bruteForce(replacedIdx)
+  }
+}
+
+// This locks up at 107
+let result = bruteForce(-1)
+// This one works because it happens before it locks up again
+// let result = bruteForce(107)
+
+print(("Value before infinite-loop", result))
