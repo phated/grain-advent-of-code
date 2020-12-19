@@ -1,0 +1,75 @@
+import String from "string"
+import Range from "range"
+import Array from "array"
+import Option from "option"
+import { naiveParseInt } from "../utils"
+
+import { data } from "./data"
+
+record SlidingWindow<a> {
+  range: Range.Range,
+  data: Array<a>
+}
+
+let forEach = (fn, window) => {
+  Range.forEach((idx) => {
+    fn(window.data[idx])
+  }, window.range)
+}
+
+let peekNext = (window) => {
+  // TODO: this doesn't handle upper/lower flip
+  match (window.range) {
+    Range.Exclusive(lower, upper) => window.data[upper],
+    Range.Inclusive(lower, upper) => window.data[upper + 1]
+  }
+}
+
+let count = (fn, window) => {
+  let mut count = 0;
+  forEach(item => {
+    if (fn(item)) {
+      count += 1;
+    }
+  }, window)
+  count
+}
+
+let some = (fn, window) => {
+  let matches = count(fn, window)
+  matches > 0
+}
+
+let slide = (amount, window) => {
+  match (window.range) {
+    Range.Exclusive(lower, upper) => { data: window.data, range: Range.Exclusive(lower + amount, upper + amount) },
+    Range.Inclusive(lower, upper) => { data: window.data, range: Range.Inclusive(lower + amount, upper + amount) },
+  }
+}
+
+// Custom problem logic now
+let problem = {
+  range: Range.Exclusive(0, 25),
+  data: Array.map(item => Option.expect("expected a number", naiveParseInt(item)), String.split(data, "\n"))
+}
+
+let isValidNextValue = (next, window) => {
+  some((item1) => {
+    some(item2 => {
+      item1 + item2 == next
+    }, window)
+  }, window)
+}
+
+let rec loop = (window) => {
+  let next = peekNext(window);
+  if (isValidNextValue(next, window)) {
+    loop(slide(1, window))
+  } else {
+    next
+  }
+}
+let result = loop(problem);
+
+print(("The first value that is invalid:", result))
+

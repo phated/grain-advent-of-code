@@ -1,0 +1,121 @@
+import String from "string"
+import Range from "range"
+import Array from "array"
+import Option from "option"
+import { naiveParseInt } from "../utils"
+
+import { data } from "./data"
+
+// Fun Sliding Window data structure using Array and Range
+record SlidingWindow<a> {
+  range: Range.Range,
+  data: Array<a>
+}
+
+let forEach = (fn, window) => {
+  Range.forEach((idx) => {
+    fn(window.data[idx])
+  }, window.range)
+}
+
+let reduce = (fn, init, window) => {
+  let mut acc = init
+  forEach((item) => {
+    acc = fn(acc, item);
+  }, window)
+  acc
+}
+
+let peekNext = (window) => {
+  // TODO: this doesn't handle upper/lower flip
+  match (window.range) {
+    Range.Exclusive(lower, upper) => window.data[upper],
+    Range.Inclusive(lower, upper) => window.data[upper + 1]
+  }
+}
+
+let count = (fn, window) => {
+  let mut count = 0;
+  forEach(item => {
+    if (fn(item)) {
+      count += 1;
+    }
+  }, window)
+  count
+}
+
+let some = (fn, window) => {
+  let matches = count(fn, window)
+  matches > 0
+}
+
+let slide = (amount, window) => {
+  // TODO: this doesn't handle upper/lower flip
+  match (window.range) {
+    Range.Exclusive(lower, upper) => { data: window.data, range: Range.Exclusive(lower + amount, upper + amount) },
+    Range.Inclusive(lower, upper) => { data: window.data, range: Range.Inclusive(lower + amount, upper + amount) },
+  }
+}
+
+let grow = (amount, window) => {
+  // TODO: this doesn't handle upper/lower flip
+  match (window.range) {
+    Range.Exclusive(lower, upper) => { data: window.data, range: Range.Exclusive(lower, upper + amount) },
+    Range.Inclusive(lower, upper) => { data: window.data, range: Range.Inclusive(lower, upper + amount) },
+  }
+}
+
+// Finally, custom problem logic
+let problem = {
+  range: Range.Exclusive(0, 25),
+  data: Array.map(item => Option.expect("expected a number", naiveParseInt(item)), String.split(data, "\n"))
+}
+
+let isValidNextValue = (next, window) => {
+  some((item1) => {
+    some(item2 => {
+      item1 + item2 == next
+    }, window)
+  }, window)
+}
+
+let rec check = (amt, window) => {
+  let res = reduce((acc, item) => acc + item, 0, window)
+  if (res < amt) {
+    check(amt, grow(1, window))
+  } else {
+    if (res == amt) {
+      window
+    } else {
+      let nextRange = match (window.range) {
+        Range.Exclusive(lower, _) => { data: window.data, range: Range.Exclusive(lower + 1, lower + 2)},
+        Range.Inclusive(lower, _) => { data: window.data, range: Range.Inclusive(lower + 1, lower + 2)},
+      }
+      check(amt, nextRange)
+    }
+  }
+}
+
+let rec loop = (window) => {
+  let next = peekNext(window);
+  if (isValidNextValue(next, window)) {
+    loop(slide(1, window))
+  } else {
+    check(next, { data: window.data, range: Range.Exclusive(0, 1) })
+  }
+}
+
+let vulnWindow = loop(problem);
+let (min, max) = reduce((acc, item)=> {
+  match (acc) {
+    (None, None) => (Some(item), Some(item)),
+    (Some(min), Some(max)) => (Some(if (item < min) item else min), Some(if (item > max) item else max)),
+    _ => fail "Can't happen"
+  }
+}, (None, None), vulnWindow)
+
+let min = Option.expect("Expected min", min);
+let max = Option.expect("Expected max", max);
+
+print(("The min & max added together is:", min + max))
+
