@@ -1,0 +1,71 @@
+import String from "string"
+import Array from "array"
+import Option from "option"
+import { naiveParseInt } from "../utils"
+
+import { data } from "./data"
+
+export enum Instructions {
+  MoveNorth(Number),
+  MoveSouth(Number),
+  MoveEast(Number),
+  MoveWest(Number),
+  TurnLeft(Number),
+  TurnRight(Number),
+  MoveForward(Number),
+}
+
+export record Ship {
+  // east/west, north/south
+  ship: (Number, Number),
+  // east/west, north/south, degrees rotation
+  waypoint: (Number, Number)
+}
+
+// TODO: This will be in the stdlib soon
+let abs = (val) => {
+  if (val < 0) {
+    val * -1
+  } else {
+    val
+  }
+}
+
+let instructions = Array.map(instruct => {
+  let len = String.length(instruct);
+  let num = Option.expect("Expected a number", naiveParseInt(String.slice(instruct, 1, len)));
+  match (String.slice(instruct, 0, 1)) {
+    "N" => MoveNorth(num),
+    "S" => MoveSouth(num),
+    "E" => MoveEast(num),
+    "W" => MoveWest(num),
+    "L" => TurnLeft(num),
+    "R" => TurnRight(num),
+    "F" => MoveForward(num),
+    x => fail "Can't process instruction: " ++ x
+  }
+}, String.split(data, "\n"))
+
+let ship = Array.reduce((ship, instruct) => {
+  match ((ship, instruct)) {
+    ({ ship, waypoint: (ew, ns) }, MoveNorth(amount)) => { ship: ship, waypoint: (ew, ns + amount) },
+    ({ ship, waypoint: (ew, ns) }, MoveSouth(amount)) => { ship: ship, waypoint: (ew, ns - amount) },
+    ({ ship, waypoint: (ew, ns) }, MoveEast(amount)) => { ship: ship, waypoint: (ew + amount, ns) },
+    ({ ship, waypoint: (ew, ns) }, MoveWest(amount)) => { ship: ship, waypoint: (ew - amount, ns) },
+    // These assume we will only ever have 90/180/270 rotations of the waypoint
+    ({ ship, waypoint: (ew, ns) }, TurnRight(90)) => { ship: ship, waypoint: (ns, ew * -1) },
+    ({ ship, waypoint: (ew, ns) }, TurnRight(180)) => { ship: ship, waypoint: (ew * -1, ns * -1) },
+    ({ ship, waypoint: (ew, ns) }, TurnRight(270)) => { ship: ship, waypoint: (ns * -1, ew) },
+    ({ ship, waypoint: (ew, ns) }, TurnLeft(90)) => { ship: ship, waypoint: (ns * -1, ew) },
+    ({ ship, waypoint: (ew, ns) }, TurnLeft(180)) => { ship: ship, waypoint: (ew * -1, ns * -1) },
+    ({ ship, waypoint: (ew, ns) }, TurnLeft(270)) => { ship: ship, waypoint: (ns, ew * -1) },
+    ({ ship: (ew, ns), waypoint: (w1, w2) }, MoveForward(amount)) => { ship: (ew + (w1 * amount), ns + (w2 * amount)), waypoint: (w1, w2) },
+    _ => fail "Shouldn't happen"
+  }
+}, { ship: (0, 0), waypoint: (10, 1) }, instructions)
+
+let manhattanDist = match (ship) {
+  { ship: (ew, ns), waypoint } => abs(ew) + abs(ns)
+}
+
+print(("Manhatten distance:", manhattanDist))
