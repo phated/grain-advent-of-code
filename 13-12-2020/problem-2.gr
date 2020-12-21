@@ -1,0 +1,28 @@
+import String from "string"
+import Array from "array"
+import Option from "option"
+import Map from "map"
+import { naiveParseInt } from "../utils"
+
+import { data } from "./data"
+
+let data = String.split(data, "\n")
+
+let data = Array.mapi((item, idx) => (item, idx), String.split(data[1], ","))
+let data = Array.filter(((x, idx)) => x != "x", data)
+
+let busNumbers = Array.map(((num, idx)) => {
+  (Option.expect("Expected a number", naiveParseInt(num)), idx)
+}, data)
+
+// Inspired by https://github.com/shahata/adventofcode-solver/blob/master/src/2020/day13.js#L20
+let mut time = 0;
+let mut step = 1;
+Array.forEach(((busNum, offset)) => {
+  while ((time + offset) % busNum != 0) {
+    time += step
+  }
+  step *= busNum;
+}, busNumbers)
+
+print(("Answer", time))

@@ -1,0 +1,26 @@
+import String from "string"
+import Array from "array"
+import Option from "option"
+import { naiveParseInt } from "../utils"
+
+import { data } from "./data"
+
+let data = String.split(data, "\n")
+
+let (startTime, busNumbers) = (
+  Option.expect("Expected a number", naiveParseInt(data[0])),
+  Array.map(num => {
+    Option.expect("Expected a number", naiveParseInt(num))
+  }, Array.filter(x => x != "x", String.split(data[1], ",")))
+)
+
+let rec loop = (time) => {
+  let found = Array.find(num => time % num == 0, busNumbers);
+  match (found) {
+    Some(busNumber) => (busNumber, time),
+    None => loop(time + 1)
+  }
+}
+
+let (busNumber, time) = loop(startTime);
+print(("Answer", (time - startTime) * busNumber))
