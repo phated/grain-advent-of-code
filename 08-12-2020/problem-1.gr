@@ -1,0 +1,56 @@
+import Array from "array"
+import String from "string"
+import Option from "option"
+import Set from "set"
+import { naiveParseInt } from "../utils"
+
+import { data } from "./data"
+
+export enum Instructions {
+  Acc(Number),
+  Jmp(Number),
+  Nop,
+}
+
+let parseIntWithSign = (origStr) => {
+  let str = String.slice(1, String.length(origStr), origStr);
+  let num = Option.expect("Expected a valid string", naiveParseInt(str));
+  match (num) {
+    num when String.startsWith("+", origStr) => num,
+    num when String.startsWith("-", origStr) => num * -1,
+    _ => fail "Invalid sign for number string"
+  }
+}
+
+let called = Set.make();
+let mut state = 0;
+
+let instructions = Array.map(instruct => {
+  match (String.split(" ", instruct)) {
+    [> "acc", arg] => Acc(parseIntWithSign(arg)),
+    [> "jmp", arg] => Jmp(parseIntWithSign(arg)),
+    [> "nop", _] => Nop,
+    x => fail "Can't handle: " ++ toString(x)
+  }
+}, String.split("\n", data))
+
+let rec processInstruction = (idx) => {
+  if (Set.contains(idx, called)) {
+    state
+  } else {
+    Set.add(idx, called)
+    let nextIdx = match (instructions[idx]) {
+      Acc(amount) => {
+        state += amount
+        idx + 1
+      },
+      Jmp(next) => idx + next,
+      Nop => idx + 1,
+    }
+    processInstruction(nextIdx)
+  }
+}
+
+let result = processInstruction(0);
+
+print(("Value before infinite-loop", result))
