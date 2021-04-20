@@ -1,0 +1,67 @@
+import Array from "array"
+import String from "string"
+import Option from "option"
+import { naiveParseInt } from "../utils"
+
+import { data } from "./data"
+
+let sortInPlace = (arr) => {
+  let part = (low, high, arr) => {
+    let pivot = arr[high];
+    let mut i = low - 1;
+    let mut iter = low
+    while (iter < high) {
+      if (arr[iter] < pivot) {
+        i += 1;
+        let temp = arr[i];
+        arr[i] = arr[iter];
+        arr[iter] = temp;
+      }
+      iter += 1
+    }
+    let temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+    i + 1
+  }
+  let rec help = (low, high, arr) => {
+    if (low < high) {
+      let idx = part(low, high, arr);
+      help(low, idx - 1, arr);
+      help(idx + 1, high, arr);
+    }
+  }
+  let low = 0;
+  let high = Array.length(arr) - 1;
+
+  help(low, high, arr);
+}
+
+let adapters = Array.append(
+  // Represents the 0 from the output device
+  [> 0],
+  Array.map(item => Option.expect("Expected number", naiveParseInt(item)), String.split("\n", data))
+)
+
+sortInPlace(adapters)
+
+let len = Array.length(adapters);
+let differences = Array.mapi((item, idx) => {
+  let nextIdx = idx + 1;
+  if (nextIdx < len) {
+    adapters[nextIdx] - item
+  } else {
+    // Represents the connection to our device
+    3
+  }
+}, adapters)
+
+let (ones, threes) = Array.reduce(((ones, threes), diff) => {
+  match (diff) {
+    1 => (ones + 1, threes),
+    3 => (ones, threes + 1),
+    _ => (ones, threes),
+  }
+}, (0, 0), differences);
+
+print(("`ones` differences * `threes` differences:", ones * threes))
