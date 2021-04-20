@@ -14,14 +14,14 @@ let sortInPlace = (arr) => {
       if (arr[iter] < pivot) {
         i += 1;
         let temp = arr[i];
-        arr[i] := arr[iter];
-        arr[iter] := temp;
+        arr[i] = arr[iter];
+        arr[iter] = temp;
       }
       iter += 1
     }
     let temp = arr[i + 1];
-    arr[i + 1] := arr[high];
-    arr[high] := temp;
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
     i + 1
   }
   let rec help = (low, high, arr) => {
@@ -40,7 +40,7 @@ let sortInPlace = (arr) => {
 let adapters = Array.append(
   // Represents the 0 from the output device
   [> 0],
-  Array.map(item => Option.expect("Expected number", naiveParseInt(item)), String.split(data, "\n"))
+  Array.map(item => Option.expect("Expected number", naiveParseInt(item)), String.split("\n", data))
 )
 
 sortInPlace(adapters)
