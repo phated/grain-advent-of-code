@@ -46,7 +46,7 @@ let seatNumbers = List.flatten(seats);
 
 let takenSeats = Array.reduce((takenSeats, boardingPass) => {
   [findSeat(boardingPass, seats), ...takenSeats]
-}, [], String.split(data, "\n"))
+}, [], String.split("\n", data))
 
 let untakenSeats = List.reject(seat => List.contains(seat, takenSeats), seatNumbers)
 

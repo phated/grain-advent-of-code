@@ -1,3 +1,4 @@
+/* grainc-flags --experimental-wasm-tail-call */
 import String from "string"
 import Range from "range"
 import Array from "array"
@@ -68,7 +69,7 @@ let grow = (amount, window) => {
 // Finally, custom problem logic
 let problem = {
   range: Range.Exclusive(0, 25),
-  data: Array.map(item => Option.expect("expected a number", naiveParseInt(item)), String.split(data, "\n"))
+  data: Array.map(item => Option.expect("expected a number", naiveParseInt(item)), String.split("\n", data))
 }
 
 let isValidNextValue = (next, window) => {

@@ -15,14 +15,14 @@ export record Info {
 }
 
 let rows = Array.map((row) => {
-  let elements = String.split(row, " ");
-  let rangeElements = String.split(elements[0], "-");
-  let policy = String.split(elements[1], ":")[0];
+  let elements = String.split(" ", row);
+  let rangeElements = String.split("-", elements[0]);
+  let policy = String.split(":", elements[1])[0];
   let position1 = Option.expect("Expected a number", naiveParseInt(rangeElements[0])) - 1;
   let position2 = Option.expect("Expected a number", naiveParseInt(rangeElements[1])) - 1;
   let password = elements[2];
   {position1: position1, position2: position2, policy: policy, password: password}
-}, String.split(data, "\n"));
+}, String.split("\n", data));
 
 let validAmount = Array.reduce((valid, info) => {
   let chars = String.explode(info.password);

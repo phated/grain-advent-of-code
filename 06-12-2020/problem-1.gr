@@ -7,7 +7,7 @@ let uniqueAnswers = Array.map((group) => {
   let chars = String.explode(group);
   let charsWithoutNewline = Array.filter(char => char != '\n', chars);
   Array.unique(charsWithoutNewline)
-}, String.split(data, "\n\n"));
+}, String.split("\n\n", data));
 
 let countAnswers = Array.reduce((acc, answers) => {
   acc + Array.length(answers)

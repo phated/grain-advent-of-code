@@ -50,7 +50,7 @@ let slide = (amount, window) => {
 // Custom problem logic now
 let problem = {
   range: Range.Exclusive(0, 25),
-  data: Array.map(item => Option.expect("expected a number", naiveParseInt(item)), String.split(data, "\n"))
+  data: Array.map(item => Option.expect("expected a number", naiveParseInt(item)), String.split("\n", data))
 }
 
 let isValidNextValue = (next, window) => {

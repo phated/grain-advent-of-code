@@ -6,9 +6,9 @@ import { naiveParseInt } from "../utils"
 
 import { data } from "./data"
 
-let data = String.split(data, "\n")
+let data = String.split("\n", data)
 
-let data = Array.mapi((item, idx) => (item, idx), String.split(data[1], ","))
+let data = Array.mapi((item, idx) => (item, idx), String.split(",", data[1]))
 let data = Array.filter(((x, idx)) => x != "x", data)
 
 let busNumbers = Array.map(((num, idx)) => {

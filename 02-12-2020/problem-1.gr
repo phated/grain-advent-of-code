@@ -13,17 +13,17 @@ export record Info {
 }
 
 let rows = Array.map((row) => {
-  let elements = String.split(row, " ");
-  let rangeElements = String.split(elements[0], "-");
-  let policy = String.split(elements[1], ":")[0];
+  let elements = String.split(" ", row);
+  let rangeElements = String.split("-", elements[0]);
+  let policy = String.split(":", elements[1])[0];
   let min = Option.expect("Expected a number", naiveParseInt(rangeElements[0]));
   let max = Option.expect("Expected a number", naiveParseInt(rangeElements[1]));
   let password = elements[2];
   {min: min, max: max, policy: policy, password: password}
-}, String.split(data, "\n"));
+}, String.split("\n", data));
 
 let validAmount = Array.reduce((valid, info) => {
-  let amt = Array.length(String.split(info.password, info.policy)) - 1;
+  let amt = Array.length(String.split(info.policy, info.password)) - 1;
   if (amt >= info.min && amt <= info.max) {
     valid + 1
   } else {

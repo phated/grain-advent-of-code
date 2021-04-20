@@ -45,7 +45,7 @@ let findSeat = (boardingPass, seats) => {
 let maxSeat = Array.reduce((maxSeat, boardingPass) => {
   let seat = findSeat(boardingPass, seats);
   if (seat > maxSeat) seat else maxSeat
-}, 0, String.split(data, "\n"))
+}, 0, String.split("\n", data))
 
 
 print(("Max seat number", maxSeat));

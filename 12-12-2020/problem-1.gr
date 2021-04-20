@@ -30,8 +30,8 @@ let abs = (val) => {
 
 let instructions = Array.map(instruct => {
   let len = String.length(instruct);
-  let num = Option.expect("Expected a number", naiveParseInt(String.slice(instruct, 1, len)));
-  match (String.slice(instruct, 0, 1)) {
+  let num = Option.expect("Expected a number", naiveParseInt(String.slice(1, len, instruct)));
+  match (String.slice(0, 1, instruct)) {
     "N" => MoveNorth(num),
     "S" => MoveSouth(num),
     "E" => MoveEast(num),
@@ -41,7 +41,7 @@ let instructions = Array.map(instruct => {
     "F" => MoveForward(num),
     x => fail "Can't process instruction: " ++ x
   }
-}, String.split(data, "\n"))
+}, String.split("\n", data))
 
 let ship = Array.reduce((ship, instruct) => {
   match ((ship, instruct)) {

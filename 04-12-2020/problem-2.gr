@@ -17,7 +17,7 @@ let isBetween = (value, range) => {
 }
 
 let getValue = (element) => {
-  String.split(element, ":")[1]
+  String.split(":", element)[1]
 }
 
 let isValidColor = (value) => {
@@ -25,7 +25,6 @@ let isValidColor = (value) => {
   Array.every((char) => List.contains(char, validChars), String.explode(value))
 }
 
-// TODO: fix syntax highlighting
 enum Validations {
   Byr(String, List<(Number, Range.Range)>),
   Iyr(String, List<(Number, Range.Range)>),
@@ -51,96 +50,53 @@ let fields = [
 ];
 
 let passports = Array.map((passport) => {
-  Array.flatMap((v) => String.split(v, " "), String.split(passport, "\n"))
-}, String.split(data, "\n\n"));
+  Array.flatMap((v) => String.split(" ", v), String.split("\n", passport))
+}, String.split("\n\n", data));
 
 let validPassports = Array.reduce((valid, passportElements) => {
   let isValid = List.every((field) => {
     let found = Array.find((element) => {
       match (field) {
-        Byr(search, validations) when String.contains(element, search) => {
+        Byr(search, validations) when String.contains(search, element) => {
           let value = getValue(element);
           List.some(((length, range)) => {
-            // `if` verbosity is needed because `&&` is a function and applies in reverse
-            if (String.length(value) == length) {
-              isBetween(value, range)
-            } else {
-              false
-            }
+            String.length(value) == length && isBetween(value, range)
           }, validations)
         },
-        Iyr(search, validations) when String.contains(element, search) => {
+        Iyr(search, validations) when String.contains(search, element) => {
           let value = getValue(element);
           List.some(((length, range)) => {
-            // `if` verbosity is needed because `&&` is a function and applies in reverse
-            if (String.length(value) == length) {
-              isBetween(value, range)
-            } else {
-              false
-            }
+            String.length(value) == length && isBetween(value, range)
           }, validations)
         },
-        Eyr(search, validations) when String.contains(element, search) => {
+        Eyr(search, validations) when String.contains(search, element) => {
           let value = getValue(element);
           List.some(((length, range)) => {
-            // `if` verbosity is needed because `&&` is a function and applies in reverse
-            if (String.length(value) == length) {
-              isBetween(value, range)
-            } else {
-              false
-            }
+            String.length(value) == length && isBetween(value, range)
           }, validations)
         },
-        Hgt(search, validations) when String.contains(element, search) => {
+        Hgt(search, validations) when String.contains(search, element) => {
           let value = getValue(element);
           List.some(((length, search, range)) => {
-            // `if` verbosity is needed because `&&` is a function and applies in reverse
-            if (String.length(value) == length) {
-              if (String.endsWith(value, search)) {
-                isBetween(String.slice(value, 0, -2), range)
-              } else {
-                false
-              }
-            } else {
-              false
-            }
+            String.length(value) == length && String.endsWith(search, value) && isBetween(String.slice(0, -2, value), range)
           }, validations)
         },
-        Hcl(search, validations) when String.contains(element, search) => {
+        Hcl(search, validations) when String.contains(search, element) => {
           let value = getValue(element);
           List.some(((length, startChar)) => {
-            // `if` verbosity is needed because `&&` is a function and applies in reverse
-            if (String.length(value) == length) {
-              if (String.startsWith(value, startChar)) {
-                isValidColor(String.slice(value, 1, length))
-              } else {
-                false
-              }
-            } else {
-              false
-            }
+            String.length(value) == length && String.startsWith(startChar, value) && isValidColor(String.slice(1, length, value))
           }, validations)
         },
-        Ecl(search, validations) when String.contains(element, search) => {
+        Ecl(search, validations) when String.contains(search, element) => {
           let value = getValue(element);
           List.some(((length, exactMatch)) => {
-            // `if` verbosity is needed because `&&` is a function and applies in reverse
-            if (String.length(value) == length) {
-              value == exactMatch
-            } else {
-              false
-            }
+            String.length(value) == length && value == exactMatch
           }, validations)
         },
-        Pid(search, validations) when String.contains(element, search) => {
+        Pid(search, validations) when String.contains(search, element) => {
           let value = getValue(element);
           List.some(((length)) => {
-            // `if` verbosity is needed because `&&` is a function and applies in reverse
-            if (String.length(value) == length) {
-              Option.isSome(naiveParseInt(value))
-            } else {
-              false
-            }
+            String.length(value) == length && Option.isSome(naiveParseInt(value))
           }, validations)
         },
         Cid(_) => true,

@@ -5,12 +5,12 @@ import Set from "set"
 import { data } from "./data"
 
 let uniqueAnswers = Array.map((groupAnswers) => {
-  let answersPerPerson = Array.map(String.explode, String.split(groupAnswers, "\n"));
+  let answersPerPerson = Array.map(String.explode, String.split("\n", groupAnswers));
   let answers = Array.map(Set.fromArray, answersPerPerson);
   // It's a bit weird to duplicate the first result, but we always know it always intersects fully
   let res = Array.reduce((dup, personAnswers) => Set.intersect(dup, personAnswers), answers[0], answers)
   Set.toArray(res)
-}, String.split(data, "\n\n"));
+}, String.split("\n\n", data));
 
 let countAnswers = Array.reduce((acc, answers) => {
   acc + Array.length(answers)

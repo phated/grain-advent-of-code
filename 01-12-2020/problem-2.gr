@@ -1,3 +1,4 @@
+/* grainc-flags --experimental-wasm-tail-call */
 import List from "list"
 import Option from "option"
 

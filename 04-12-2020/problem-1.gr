@@ -15,11 +15,11 @@ let fields = [
   "cid",
 ];
 
-let passports = String.split(data, "\n\n");
+let passports = String.split("\n\n", data);
 
 let validPassports = Array.reduce((valid, passport) => {
   let isValid = List.every((field) => {
-    field == "cid" || String.contains(passport, field ++ ":")
+    field == "cid" || String.contains(field ++ ":", passport)
   }, fields);
   if (isValid) {
     valid + 1

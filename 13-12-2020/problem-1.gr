@@ -5,13 +5,13 @@ import { naiveParseInt } from "../utils"
 
 import { data } from "./data"
 
-let data = String.split(data, "\n")
+let data = String.split("\n", data)
 
 let (startTime, busNumbers) = (
   Option.expect("Expected a number", naiveParseInt(data[0])),
   Array.map(num => {
     Option.expect("Expected a number", naiveParseInt(num))
-  }, Array.filter(x => x != "x", String.split(data[1], ",")))
+  }, Array.filter(x => x != "x", String.split(",", data[1])))
 )
 
 let rec loop = (time) => {
